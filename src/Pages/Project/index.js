@@ -1,5 +1,5 @@
 import {useEffect, useState} from "react";
-import {projectURL} from "../../config";
+import {projectURL, tasksURL} from "../../config";
 import handleError from "../../utils/ErrorHandler";
 import {Link, useParams} from "react-router-dom";
 import UserTasks from "../../Organisms/UserTasks";
@@ -21,12 +21,31 @@ export default function Project() {
             const response = await fetch(projectURL + '?id=' + params.id)
             if (await handleError(response, setError)) {
                 const data = await response.json()
-                setProject(data.data)
+                setProject(data.data) // set the project data
+                for(const user of data.data.users) {
+                    user.tasks = await getTasks(user.id)
+                }
+                setProject(data.data) // set the tasks data
+
             }
         } catch(e) {
             setError('Unable to retrieve data')
         }
     }
+
+    const getTasks = async (uid) => {
+        try {
+            const response = await fetch(tasksURL + '?user_id=' + uid + '&project_id=' + params.id)
+            if (await handleError(response, setError)) {
+                const data = await response.json()
+                return data.data
+            }
+        } catch(e) {
+            setError('Unable to retrieve task data')
+            return []
+        }
+    }
+
 
     useEffect(() => {
         getProject()
@@ -58,7 +77,7 @@ export default function Project() {
             <div className='row overflow-auto flex-nowrap h-75 pb-5'>
                 {
                     project &&
-                    project?.users?.map(user => <UserTasks key={user.id} user={user} tasks={[]} />)
+                    project?.users?.map(user => <UserTasks key={user.id} user={user} tasks={user.tasks} />)
                 }
             </div>
 

@@ -1,5 +1,5 @@
 import {Link} from "react-router-dom";
-import Project from "../../Molecules/Project";
+import Task from "../../Molecules/Task";
 
 export default function UserTasks({user, tasks}) {
     return (
@@ -9,11 +9,12 @@ export default function UserTasks({user, tasks}) {
                     {user.name}
                     <img src={user.avatar} alt="User Avatar" className="float-right" />
                 </h4>
-
-                {
-                    tasks.map(task => <Project />)
-                }
-
+                <div className="overflow-auto w-100" style={{height: 'calc(100% - 5px;)'}}>
+                    {
+                        tasks &&
+                        tasks.map(task => <Task id={task.id} name={task.name} overdue={task.overdue} estimate={task.estimate} />)
+                    }
+                </div>
             </div>
         </div>
     )
