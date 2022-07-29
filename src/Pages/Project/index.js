@@ -1,12 +1,18 @@
 import {useEffect, useState} from "react";
-import {projectURL, tasksURL} from "../../config";
+import { useNavigate } from "react-router-dom";
+import {projectURL, tasksURL, taskURL} from "../../config";
 import handleError from "../../utils/ErrorHandler";
 import {Link, useParams} from "react-router-dom";
 import UserTasks from "../../Organisms/UserTasks";
+import Modal from "../../Organisms/Modal";
+import TaskModal from "../../Molecules/TaskModal";
 
 export default function Project() {
     const [project, setProject] = useState({})
+    const [task, setTask] = useState(false)
     const [error, setError] = useState(false)
+    const [taskError, setTaskError] = useState(false)
+    const navigate = useNavigate()
 
     const params = useParams()
 
@@ -46,13 +52,43 @@ export default function Project() {
         }
     }
 
+    const getTask = async id => {
+        try {
+            const response = await fetch(taskURL + '?id=' + id)
+            if (await handleError(response, setError)) {
+                const data = await response.json()
+                setTask(data.data)
+            }
+        } catch(e) {
+            setTaskError('Unable to retrieve task')
+        }
+    }
 
     useEffect(() => {
         getProject()
     }, [])
 
+    useEffect(() => {
+        if (params.tid) {
+            getTask(params.tid)
+        }
+    }, [params.tid])
+
     return (
         <>
+            {
+                params.tid &&
+                <Modal title={(task ? task.name + ' - ' + task.deadline : 'Error')} show={true} closeModal={() => {navigate("/project/" + params.id)}}>
+                    {
+                        task &&
+                        <TaskModal task={task} />
+                    }
+                    {
+                        taskError &&
+                        <div className="alert alert-danger">Error: {taskError}</div>
+                    }
+                </Modal>
+            }
             <div className='row mb-2'>
                 <div className='col-12'>
                     {

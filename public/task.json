@@ -1,0 +1,13 @@
+{
+  "message": "Successfully retrieved task",
+  "data": {
+    "id": "17",
+    "project_id": "1",
+    "user_id": "7",
+    "name": "augue",
+    "description": "Phasellus sit amet erat. Nulla tempus. Vivamu...",
+    "estimate": "3",
+    "deadline": "30/07/2022",
+    "overdue": true
+  }
+}

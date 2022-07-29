@@ -12,7 +12,7 @@ export default function UserTasks({user, tasks}) {
                 <div className="overflow-auto w-100" style={{height: 'calc(100% - 5px;)'}}>
                     {
                         tasks &&
-                        tasks.map(task => <Task id={task.id} name={task.name} overdue={task.overdue} estimate={task.estimate} />)
+                        tasks.map(task => <Task key={task.id} id={task.id} name={task.name} overdue={task.overdue} estimate={task.estimate} />)
                     }
                 </div>
             </div>

@@ -16,6 +16,7 @@ export default function App() {
           <Routes>
             <Route path="/" element={<Home />} />
             <Route path="/project/:id" element={<Project />} />
+            <Route path="/project/:id/task/:tid" element={<Project />} />
           </Routes>
           <footer className="fixed-bottom border-top mt-5 p-3">
             <p className="m-0">&copy; Copyright iO Academy 2022</p>
