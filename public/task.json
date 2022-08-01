@@ -8,6 +8,8 @@
     "description": "Phasellus sit amet erat. Nulla tempus. Vivamu...",
     "estimate": "3",
     "deadline": "30/07/2022",
-    "overdue": true
+    "overdue": true,
+    "estimate_hrs": 12,
+    "estimate_days": 1.5
   }
 }

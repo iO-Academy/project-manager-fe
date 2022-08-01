@@ -8,7 +8,9 @@
       "name": "mattis",
       "estimate": "3",
       "deadline": "30/07/2022",
-      "overdue": true
+      "overdue": true,
+      "estimate_hrs": 12,
+      "estimate_days": 1.5
     },
     {
       "id": "41",
@@ -17,7 +19,9 @@
       "name": "curae",
       "estimate": null,
       "deadline": null,
-      "overdue": null
+      "overdue": null,
+      "estimate_hrs": null,
+      "estimate_days": null
     }
   ]
 }

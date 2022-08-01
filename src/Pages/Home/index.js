@@ -1,15 +1,18 @@
 import Project from "../../Molecules/Project";
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import {projectsURL} from "../../config";
 import handleError from "../../utils/ErrorHandler";
+import LocaleContext from "../../utils/LocaleContext";
 
 export default function Home() {
     const [projects, setProjects] = useState([])
     const [error, setError] = useState(false)
 
+    const locale = useContext(LocaleContext)
+
     const getProjects = async () => {
         try {
-            const response = await fetch(projectsURL)
+            const response = await fetch(projectsURL + '?locale=' + locale)
             if (await handleError(response, setError)) {
                 const data = await response.json()
                 setProjects(data.data)
@@ -21,7 +24,7 @@ export default function Home() {
 
     useEffect(() => {
         getProjects()
-    }, [])
+    }, [locale])
 
     return (
         <>

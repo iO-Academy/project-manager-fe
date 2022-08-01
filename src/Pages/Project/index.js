@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useContext, useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import {projectURL, tasksURL, taskURL} from "../../config";
 import handleError from "../../utils/ErrorHandler";
@@ -6,6 +6,7 @@ import {Link, useParams} from "react-router-dom";
 import UserTasks from "../../Organisms/UserTasks";
 import Modal from "../../Organisms/Modal";
 import TaskModal from "../../Molecules/TaskModal";
+import LocaleContext from "../../utils/LocaleContext";
 
 export default function Project() {
     const [project, setProject] = useState({})
@@ -16,6 +17,8 @@ export default function Project() {
 
     const params = useParams()
 
+    const locale = useContext(LocaleContext)
+
     const moreStyles = {
         right: 0,
         top: '150px',
@@ -24,10 +27,9 @@ export default function Project() {
 
     const getProject = async () => {
         try {
-            const response = await fetch(projectURL + '?id=' + params.id)
+            const response = await fetch(projectURL + '?id=' + params.id + '&locale=' + locale)
             if (await handleError(response, setError)) {
                 const data = await response.json()
-                setProject(data.data) // set the project data
                 for(const user of data.data.users) {
                     user.tasks = await getTasks(user.id)
                 }
@@ -41,7 +43,7 @@ export default function Project() {
 
     const getTasks = async (uid) => {
         try {
-            const response = await fetch(tasksURL + '?user_id=' + uid + '&project_id=' + params.id)
+            const response = await fetch(tasksURL + '?user_id=' + uid + '&project_id=' + params.id + '&locale=' + locale)
             if (await handleError(response, setError)) {
                 const data = await response.json()
                 return data.data
@@ -54,9 +56,12 @@ export default function Project() {
 
     const getTask = async id => {
         try {
-            const response = await fetch(taskURL + '?id=' + id)
+            const response = await fetch(taskURL + '?id=' + id + '&locale=' + locale)
             if (await handleError(response, setError)) {
                 const data = await response.json()
+                if (locale === 'us' && data.data.estimate_hrs && data.data.estimate_days) {
+                    data.data.estimate = `${data.data.estimate_hrs} hrs / ${data.data.estimate_days} days`
+                }
                 setTask(data.data)
             }
         } catch(e) {
@@ -66,13 +71,13 @@ export default function Project() {
 
     useEffect(() => {
         getProject()
-    }, [])
+    }, [locale])
 
     useEffect(() => {
         if (params.tid) {
             getTask(params.tid)
         }
-    }, [params.tid])
+    }, [params.tid, locale])
 
     return (
         <>
